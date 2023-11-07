@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <JUCERPROJECT id="Y73nE2" name="demo" projectType="guiapp" useAppConfig="0"
-              addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1">
+              addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1" displaySplashScreen="1">
   <MAINGROUP id="oAIKB4" name="demo">
     <GROUP id="{4B87B3A5-8D18-2E7A-4711-3FBCEFC2E41C}" name="supperware">
       <FILE id="nvVhHe" name="HeadMatrix.h" compile="0" resource="0" file="../supperware/HeadMatrix.h"/>
@@ -53,6 +53,7 @@
       <CONFIGURATIONS>
         <CONFIGURATION isDebug="1" name="Debug" targetName="demo"/>
         <CONFIGURATION isDebug="0" name="Release" targetName="demo"/>
+        <CONFIGURATION isDebug="0"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="juce_audio_basics" path="../../../JUCE/modules"/>
@@ -64,6 +65,7 @@
         <MODULEPATH id="juce_opengl" path="../../../JUCE/modules"/>
         <MODULEPATH id="juce_gui_extra" path="../../../JUCE/modules"/>
         <MODULEPATH id="juce_audio_devices" path="../../../JUCE/modules"/>
+        <MODULEPATH id="juce_osc" path="../../JUCE/modules"/>
       </MODULEPATHS>
     </VS2019>
     <XCODE_MAC targetFolder="Builds/MacOSX" extraCompilerFlags="-I ../../../supperware&#10;-I ../../../supperware/configpanel&#10;-I ../../../supperware/headpanel&#10;-I ../../../supperware/midi&#10;">
@@ -81,8 +83,27 @@
         <MODULEPATH id="juce_opengl" path="../../../JUCE/modules"/>
         <MODULEPATH id="juce_gui_extra" path="../../../JUCE/modules"/>
         <MODULEPATH id="juce_audio_devices" path="../../../JUCE/modules"/>
+        <MODULEPATH id="juce_osc" path="../../JUCE/modules"/>
       </MODULEPATHS>
     </XCODE_MAC>
+    <LINUX_MAKE targetFolder="Builds/LinuxMakefile" extraCompilerFlags="../../../supperware&#10;../../../supperware/configpanel&#10;../../../supperware/headpanel&#10;../../../supperware/midi&#10;/usr/include/freetype2/&#10;/usr/include/gtk-2.0/&#10;/usr/include/glib-2.0/&#10;/usr/lib/x86_64-linux-gnu/glib-2.0/include/&#10;/usr/include/cairo/&#10;/usr/include/pango-1.0/&#10;/usr/include/harfbuzz/&#10;/usr/lib/x86_64-linux-gnu/gtk-2.0/include/&#10;/usr/include/gdk-pixbuf-2.0/&#10;/usr/include/atk-1.0/&#10;/usr/include/webkitgtk-4.0/">
+      <CONFIGURATIONS>
+        <CONFIGURATION isDebug="1" name="Debug" headerPath="../../../supperware&#10;../../../supperware/configpanel&#10;../../../supperware/headpanel&#10;../../../supperware/midi&#10;/usr/include/freetype2/&#10;/usr/include/gtk-2.0/&#10;/usr/include/glib-2.0/&#10;/usr/lib/x86_64-linux-gnu/glib-2.0/include/&#10;/usr/include/cairo/&#10;/usr/include/pango-1.0/&#10;/usr/include/harfbuzz/&#10;/usr/lib/x86_64-linux-gnu/gtk-2.0/include/&#10;/usr/include/gdk-pixbuf-2.0/&#10;/usr/include/atk-1.0/&#10;/usr/include/webkitgtk-4.0/"/>
+        <CONFIGURATION isDebug="0" name="Release" headerPath="../../../supperware&#10;../../../supperware/configpanel&#10;../../../supperware/headpanel&#10;../../../supperware/midi&#10;/usr/include/freetype2/&#10;/usr/include/gtk-2.0/&#10;/usr/include/glib-2.0/&#10;/usr/lib/x86_64-linux-gnu/glib-2.0/include/&#10;/usr/include/cairo/&#10;/usr/include/pango-1.0/&#10;/usr/include/harfbuzz/&#10;/usr/lib/x86_64-linux-gnu/gtk-2.0/include/&#10;/usr/include/gdk-pixbuf-2.0/&#10;/usr/include/atk-1.0/&#10;/usr/include/webkitgtk-4.0/"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_audio_basics" path="../../juce"/>
+        <MODULEPATH id="juce_audio_devices" path="../../juce"/>
+        <MODULEPATH id="juce_core" path="../../juce"/>
+        <MODULEPATH id="juce_data_structures" path="../../juce"/>
+        <MODULEPATH id="juce_events" path="../../juce"/>
+        <MODULEPATH id="juce_graphics" path="../../juce"/>
+        <MODULEPATH id="juce_gui_basics" path="../../juce"/>
+        <MODULEPATH id="juce_gui_extra" path="../../juce"/>
+        <MODULEPATH id="juce_opengl" path="../../juce"/>
+        <MODULEPATH id="juce_osc" path="../../JUCE/modules"/>
+      </MODULEPATHS>
+    </LINUX_MAKE>
   </EXPORTFORMATS>
   <MODULES>
     <MODULE id="juce_audio_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
@@ -94,6 +115,7 @@
     <MODULE id="juce_gui_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
     <MODULE id="juce_gui_extra" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
     <MODULE id="juce_opengl" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_osc" showAllCode="1" useLocalCopy="1" useGlobalPath="1"/>
   </MODULES>
   <LIVE_SETTINGS>
     <WINDOWS/>

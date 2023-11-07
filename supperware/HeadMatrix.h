@@ -128,6 +128,11 @@ public:
 
     // --------------------------------------------------------------------
 
+    float* getMatrix() const
+    {
+        return(matRead);
+    }
+
 private:
     float matrix[2*9];
     float* matWrite;

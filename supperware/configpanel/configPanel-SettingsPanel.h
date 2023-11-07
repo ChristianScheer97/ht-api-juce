@@ -37,8 +37,14 @@ namespace ConfigPanel
             addToggle(position, "Slow correction", 3);
             addToggle(position, "Fast correction", 3);
 
+            position.addXY(0, 10);
+            addLabel(position, "OSC Settings", LabelStyle::SectionHeading);
+            addLabel(position, "Host Address: ", LabelStyle::SubData);
+            position.addXY(1, 0);
+            addLabel(position, "", LabelStyle::SubData);
+
             setSize(LabelWidth, position.y + 2);
-            setEnabled(false);
+            setEnabled(true);
         }
 
         // ---------------------------------------------------------------------
@@ -67,7 +73,7 @@ namespace ConfigPanel
 
         // ---------------------------------------------------------------------
 
-        void trackerMidiConnectionChanged(Midi::State /*state*/) override
+        void trackerMidiConnectionChanged(Midi::State state) override
         {
             setEnabled(td.isConnected());
             refreshAsync();

@@ -29,9 +29,9 @@ namespace Midi
         };
 
         TrackerDriver() :
-            MidiDuplex("Head Tracker", "Supperware Bootloader"),
+            MidiDuplex("Head Tracker MIDI 1", "Supperware Bootloader"),
             tracker(this),
-            currentAngleMode(Tracker::AngleMode::Quaternion),
+            currentAngleMode(Tracker::AngleMode::YPR),
             is100Hz(false),
             isTrackerOn(false)
         {}
