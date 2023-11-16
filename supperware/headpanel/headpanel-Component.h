@@ -221,6 +221,13 @@ namespace HeadPanel
             listener = l;
         }
 
+        //----------------------------------------------------------- ----------
+
+        void sendOscMessage(juce::OSCMessage *message)
+        {
+            settingsPanel.sendOscMeassage(message);
+        }
+
     private:
         Listener* listener;
         Midi::TrackerDriver trackerDriver;
@@ -244,5 +251,7 @@ namespace HeadPanel
                 startTimer(20);
             }
         }
+
+
     };
 };

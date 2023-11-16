@@ -39,22 +39,37 @@ namespace ConfigPanel
 
             position.addXY(0, 10);
             addLabel(position, "OSC Settings", LabelStyle::SectionHeading);
-            addLabel(position, "Host Address: ", LabelStyle::SubData);
-            position.addXY(1, 0);
-            addLabel(position, "", LabelStyle::SubData);
+            addLabel(position, "Host Address: ", LabelStyle::SubData, false, false, true);
+            position.addXY(120, 0);
+            addLabel(position, oscAddress, LabelStyle::Data, true, true, false, "address");
+            position.addXY(-120, 0);
+            addLabel(position, "UDP Port:", LabelStyle::SubData, false, false, true);
+            position.addXY(120, 0);
+            addLabel(position, std::to_string(udpPort), LabelStyle::Data, true, true, false, "port");
+            position.addXY(-120, 0);
+            addTextButton(position, "Reconnect", 172);
 
             setSize(LabelWidth, position.y + 2);
             setEnabled(true);
+
+            // OSC
+            if (!oscSender.connect(oscAddress, udpPort))   //
+                showConnectionErrorMessage("Error: could not connect to UDP port " + std::to_string(udpPort) + ".");
         }
 
         // ---------------------------------------------------------------------
 
-        void click(const bool isTextButton, const int index, const bool isChecked) override
+        void click(juce::Button* button, const bool isTextButton, const int index, const bool isChecked) override
         {
             if (isTextButton)
             {
                 // button is disabled via the readback
-                td.calibrateCompass();
+                if (button->getButtonText() == "Calibrate compass")
+                    td.calibrateCompass();
+                else if (button->getButtonText() == "Reconnect")
+                {
+                    reconnectOscSender();
+                }
             }
             else
             {
@@ -99,8 +114,46 @@ namespace ConfigPanel
 
         // ---------------------------------------------------------------------
 
+        void reconnectOscSender() {
+            oscSender.connect(oscAddress, udpPort);
+        }
+
+        void sendOscMeassage(juce::OSCMessage* message)
+        {
+            if (!oscSender.send(*message)) // send the message
+                showConnectionErrorMessage("Error: could not send OSC message.");
+        }
+
+        void showConnectionErrorMessage(const juce::String& message) {
+            juce::AlertWindow::showMessageBoxAsync (juce::AlertWindow::WarningIcon,
+                                                    "Connection error",
+                                                    message,
+                                                    "OK");
+        }
+
+        void setOscAddress(juce::String newAddress) {
+            oscAddress = newAddress;
+        }
+
+        void setUdpPort(int newPort) {
+            udpPort = newPort;
+        }
+
+        juce::String getOscAddress() {
+            return oscAddress;
+        }
+
+        int getUdpPort() const {
+            return udpPort;
+        }
+
+
     private:
         Tracker::CompassState compassState;
+
+        juce::OSCSender oscSender;
+        int udpPort = 59000;
+        juce::String oscAddress = "127.0.0.1";
 
         // ---------------------------------------------------------------------
 

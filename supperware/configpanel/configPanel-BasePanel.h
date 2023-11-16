@@ -13,7 +13,7 @@ namespace ConfigPanel
     enum class LabelStyle { SectionHeading, Description, Data, SubData };
 
     class BasePanel : public juce::Component, public juce::MultiTimer,
-        private juce::Button::Listener, private juce::ComboBox::Listener,
+private juce::Button::Listener, private juce::ComboBox::Listener, private juce::Label::Listener,
         private Midi::TrackerDriver::Listener
     {
     public:
@@ -27,6 +27,8 @@ namespace ConfigPanel
         {
             setOpaque(false);
             td.addListener(this);
+
+
         }
 
         // ---------------------------------------------------------------------
@@ -38,8 +40,11 @@ namespace ConfigPanel
 
         // ---------------------------------------------------------------------
 
-        virtual void click(const bool /*isTextButton*/, const int /*index*/, const bool /*isChecked*/) {}
+        virtual void click(juce::Button*, const bool /*isTextButton*/, const int /*index*/, const bool /*isChecked*/) {}
         virtual void comboBox(const int /*index*/, const int /*option*/) {}
+        virtual void setUdpPort(int /*newPort*/) {}
+        virtual void setOscAddress (juce::String /*newAddreess*/) {}
+
 
         // ---------------------------------------------------------------------
         
@@ -48,14 +53,14 @@ namespace ConfigPanel
             juce::TextButton* textB = dynamic_cast<juce::TextButton*>(button);
             if (textB)
             {
-                click(true, textButtons.indexOf(textB), false);
+                click(button, true, textButtons.indexOf(textB), false);
             }
             else
             {
                 juce::ToggleButton* toggleB = dynamic_cast<juce::ToggleButton*>(button);
                 if (toggleB)
                 {
-                    click(false, toggleButtons.indexOf(toggleB), toggleB->getToggleState());
+                    click(button, false, toggleButtons.indexOf(toggleB), toggleB->getToggleState());
                 }
             }
         }
@@ -69,6 +74,15 @@ namespace ConfigPanel
         }
 
         // ---------------------------------------------------------------------
+
+        void labelTextChanged(juce::Label* label) override
+        {
+            juce::String id = label->getComponentID();
+            if (id == "port")
+                setUdpPort(label->getText().getIntValue());
+            else if (id == "address")
+                setOscAddress(label->getText());
+        }
 
         /** Unilaterally enable or disable all controls */
         void setEnabled(const bool shouldBeEnabled)
@@ -104,8 +118,11 @@ namespace ConfigPanel
 
         // ------------------------------------------------------------------------
 
+
+
 protected:
         Midi::TrackerDriver& td;
+
         Properties* props;
         juce::String title;
         const juce::Colour TitleLabel = juce::Colour(0xff28789c);
@@ -120,7 +137,7 @@ protected:
 
         // ------------------------------------------------------------------------
 
-        int addLabel(juce::Point<int>& topLeft, const juce::String text, const LabelStyle style)
+        int addLabel(juce::Point<int>& topLeft, const juce::String text, const LabelStyle style, bool isEditable=false, bool nextNewLine=true, bool indent=false, juce::String id="")
         {
             int styleIndex;
             switch (style)
@@ -137,13 +154,31 @@ protected:
             const int LineHeight[4] = { 28, 24, 24, 24 };
 
             int index = labels.size();
+
             juce::Label* lb = labels.add(new juce::Label(text, text));
-            lb->setTopLeftPosition(topLeft);
-            lb->setSize(LabelWidth, LineHeight[styleIndex]);
+
+            if (!indent)
+                lb->setTopLeftPosition(topLeft);
+            else
+                lb->setTopLeftPosition(topLeft.translated(Indent, 0));
+
             lb->setFont(juce::Font(LabelFontSize[styleIndex], LabelFontStyle[styleIndex]));
             lb->setColour(juce::Label::ColourIds::textColourId, LabelColour[styleIndex]);
-            topLeft.y += LineHeight[styleIndex] + 3;
+            lb->setComponentID(id);
+            lb->addListener(this);
+            if (isEditable)
+            {
+                lb->setEditable(true);
+                lb->setSize(LabelWidth/2, LineHeight[styleIndex]);
+            }
+            else
+                lb->setSize(LabelWidth, LineHeight[styleIndex]);
+
+            if (nextNewLine)
+                topLeft.y += LineHeight[styleIndex] + 3;
+
             addAndMakeVisible(lb);
+
             return index;
         }
 
