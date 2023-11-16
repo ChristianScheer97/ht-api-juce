@@ -32,17 +32,23 @@ void MainComponent::resized()
     // This is called when the MainComponent is resized.
     // If you add any child components, this is where you should
     // update their positions.
-    std::cout << "test";
 }
 
 void MainComponent::trackerChanged(const HeadMatrix& headMatrix)
 {
     // headMatrix.transform and headMatrix.transformTranspose can be used here
     // to rotate an object.
-    float yaw;
-    juce::OSCMessage message("/WONDER/tracker/move/pan");
+
     float* mat = headMatrix.getMatrix();
-    yaw = (float)mat[1] * 180/M_PI;
+    float yaw = (float)mat[1] * 180/M_PI;
+    float pitch = (float)mat[2] * 180/M_PI;
+    float roll = (float)mat[3] * 180/M_PI;
+
+    std::cout << "Yaw: " << yaw << "\n";
+    std::cout << "Pitch: " << pitch << "\n";
+    std::cout << "Roll: " << roll << "\n";
+
+    juce::OSCMessage message("/WONDER/tracker/move/pan");
     message.addFloat32(yaw);
     headPanel.sendOscMessage(&message);
 }
