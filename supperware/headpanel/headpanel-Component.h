@@ -41,7 +41,6 @@ namespace HeadPanel
             doButton(hbConnect, im, 1, 2, 58);
             hbConnect.setVisible(false);
         }
-
         //----------------------------------------------------------------------
 
         const Midi::TrackerDriver& getTrackerDriver() const
@@ -127,7 +126,14 @@ namespace HeadPanel
             gazeInitial = gazeNow;
         }
 
-        // -------------------------------------------------------------------------
+        //------------------------------------------------------------------------
+
+        juce::String getOscString() const
+        {
+            return settingsPanel.getOscString();
+        }
+
+        //------------------------------------------------------------------------
 
         void mouseDrag(const juce::MouseEvent& event) override
         {

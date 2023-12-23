@@ -47,6 +47,10 @@ namespace ConfigPanel
             position.addXY(120, 0);
             addLabel(position, std::to_string(udpPort), LabelStyle::Data, true, true, false, "port");
             position.addXY(-120, 0);
+            addLabel(position, "OSC String", LabelStyle::SubData, false, false, true);
+            position.addXY(120, 0);
+            addLabel(position, oscString, LabelStyle::Data, true, true, false, "oscString");
+            position.addXY(-120, 0);
             addTextButton(position, "Reconnect", 172);
 
             setSize(LabelWidth, position.y + 2);
@@ -147,13 +151,18 @@ namespace ConfigPanel
             return udpPort;
         }
 
+        juce::String getOscString() const {
+            return oscString;
+        }
+
 
     private:
         Tracker::CompassState compassState;
 
         juce::OSCSender oscSender;
-        int udpPort = 59000;
+        int udpPort = 9000;
         juce::String oscAddress = "127.0.0.1";
+        juce::String oscString = "/ypr";
 
         // ---------------------------------------------------------------------
 
