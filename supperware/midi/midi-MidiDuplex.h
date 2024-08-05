@@ -15,14 +15,17 @@ namespace Midi
     class MidiDuplex : public juce::MidiInputCallback, protected juce::MultiTimer
     {
     public:
-        MidiDuplex(const juce::String deviceName, const juce::String bootloaderName) :
+        MidiDuplex(const juce::String newDeviceID, const juce::String deviceName, const juce::String bootloaderName) :
             midiOut(nullptr),
             midiIn(nullptr),
+            //midiTrackerID(newDeviceID),
             device(deviceName),
             bootloader(bootloaderName),
             connectionState(State::Unavailable),
             autoReconnect(false),
-            autoDisconnect(true)
+            autoDisconnect(true),
+            deviceID(newDeviceID)
+
         {
             /* This timer doesn't ever stop: it handles unavailable/available signalling
                even when automatic modes are switched off.
@@ -109,6 +112,8 @@ namespace Midi
             {
                 midiOut = juce::MidiOutput::openDevice(outputIdentifier);
                 midiIn  = juce::MidiInput::openDevice(inputIdentifier, this);
+                std::cout<<"when connect inID: "<<inputIdentifier<<std::endl;
+                std::cout<<"when connect outID: "<<outputIdentifier<<std::endl;
                 if (midiOut && midiIn)
                 {
                     midiIn->start();
@@ -206,7 +211,7 @@ namespace Midi
     protected:
         std::unique_ptr<juce::MidiOutput> midiOut;
         std::unique_ptr<juce::MidiInput> midiIn;
-        juce::String device, bootloader;
+        juce::String device, bootloader, deviceID;
         State connectionState;
         bool autoReconnect, autoDisconnect;
 
@@ -245,7 +250,9 @@ namespace Midi
         void getIdentifiers(bool& wouldConnectToBootloader, juce::String& outputIdentifier, juce::String& inputIdentifier) const
         {
             const juce::Array<juce::MidiDeviceInfo>& outInfo = juce::MidiOutput::getAvailableDevices();
-            outputIdentifier = findIdentifierInMidiInfo(outInfo, device);
+            //outputIdentifier = findIdentifierInMidiInfo(outInfo, device);
+            outputIdentifier = deviceID;
+            //std::cout<<"Output ID via DeviceName: "<<inputIdentifier<<std::endl;
             if (outputIdentifier.isNotEmpty())
             {
                 wouldConnectToBootloader = false;
@@ -257,16 +264,23 @@ namespace Midi
             }
 
             inputIdentifier = juce::String();
+            // inputIdentifier = deviceID;
             if (outputIdentifier.isNotEmpty())
             {
                 const juce::Array<juce::MidiDeviceInfo>& inInfo = juce::MidiInput::getAvailableDevices();
                 if (wouldConnectToBootloader)
                 {
-                    inputIdentifier = findIdentifierInMidiInfo(inInfo, bootloader);
+                    //inputIdentifier = findIdentifierInMidiInfo(inInfo, bootloader);
+                    inputIdentifier = deviceID;
+                    //std::cout<<"Input ID via Bootloader: "<<inputIdentifier<<std::endl;
+
                 }
                 else
                 {
-                    inputIdentifier = findIdentifierInMidiInfo(inInfo, device);
+                    //inputIdentifier = findIdentifierInMidiInfo(inInfo, device);
+                    inputIdentifier = deviceID;
+                    //std::cout<<"Input ID via DeviceName: "<<inputIdentifier<<std::endl;
+
                 }
             }
         }

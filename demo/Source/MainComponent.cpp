@@ -38,18 +38,27 @@ void MainComponent::trackerChanged(const HeadMatrix& headMatrix)
 {
     // headMatrix.transform and headMatrix.transformTranspose can be used here
     // to rotate an object.
+    float* mat = headMatrix.getMatrix();
+    float yaw = std::atan2(mat[3],mat[0]) * 180/M_PI;
+    float roll = std::atan2(-mat[6],std::sqrt(std::pow(mat[7], 2) + std::pow(mat[8], 2))) * 180/M_PI;
+    float pitch = std::atan2(mat[7],mat[8]) * 180/M_PI;
 
+/**
     float* mat = headMatrix.getMatrix();
     float yaw = (float)mat[1] * 180/M_PI;
     float pitch = (float)mat[2] * 180/M_PI;
     float roll = (float)mat[3] * 180/M_PI;
+**/
 
     std::cout << "Yaw: " << yaw << "\n";
     std::cout << "Pitch: " << pitch << "\n";
-    std::cout << "Roll: " << roll << "\n";
+    // std::cout << "Roll: " << roll << "\n";
 
-    juce::OSCMessage message("/WONDER/tracker/move/pan");
+    juce::OSCMessage message("/WONDER/tracker");
+    message.addString("yaw-pitch-roll");
     message.addFloat32(yaw);
+    message.addFloat32(pitch);
+    // message.addFloat32(roll);
     headPanel.sendOscMessage(&message);
 }
 
